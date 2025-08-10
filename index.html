@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>החנות שלי</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-left">
+      <a href="#" id="logo" class="logo">
+        <img src="logo.jpg" alt="החנות שלי" class="logo-img">
+      </a>
+      
+
+      <!-- חיפוש -->
+      <form id="search-form" class="search-form" autocomplete="off">
+        <input type="text" id="search-input" placeholder="חפש מוצר..." />
+        <button type="submit" class="btn primary">חיפוש</button>
+      </form>
+    </div>
+
+    <div class="header-right">
+      <button class="btn ghost" id="nav-login">התחברות</button>
+      <button class="btn primary" id="nav-orders" style="display:none;">
+        ההזמנות שלי
+      </button>
+      <button class="btn primary" id="nav-cart">
+        סל קניות <span id="cart-count" class="badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- סרגל קטגוריות (מתמלא דינמית) -->
+  <div id="categories-bar" class="categories-bar">
+    <div class="bar-inner" id="categories-bar-inner"></div>
+  </div>
+
+  <!-- Main -->
+  <main>
+    <!-- דף הבית -->
+    <section id="home">
+      <h2 class="section-title">🔥 מבצעי היום</h2>
+      <div class="products-row" id="daily-deals">
+        <!-- ייטען ב-JS -->
+      </div>
+    
+      <h2 class="section-title">⭐ המוצרים הנמכרים ביותר</h2>
+      <div class="products-row" id="best-sellers">
+        <!-- ייטען ב-JS -->
+      </div>
+    </section>
+    
+
+    <!-- עמוד קטגוריה -->
+    <section id="category" style="display:none;"></section>
+
+    <!-- עמוד פרטי מוצר -->
+    <section id="product-details" style="display:none;"></section>
+
+    <!-- עמוד סל קניות -->
+    <section id="cart" style="display:none;"></section>
+
+    <!-- התחברות / הרשמה -->
+    <section id="login" style="display:none;">
+      <div class="auth-card">
+        <nav class="auth-tabs">
+          <button type="button" id="tab-login" class="active">התחברות</button>
+          <button type="button" id="tab-register">הרשמה</button>
+        </nav>
+
+        <form id="form-login" class="auth-form">
+          <label>אימייל
+            <input type="email" id="login-email" required>
+          </label>
+          <label>סיסמה
+            <input type="password" id="login-password" required>
+          </label>
+          <button type="submit" class="btn primary">התחבר/י</button>
+          <div class="auth-msg" id="login-msg"></div>
+        </form>
+
+        <form id="form-register" class="auth-form" style="display:none;">
+          <label>שם מלא
+            <input type="text" id="reg-name" required>
+          </label>
+          <label>אימייל
+            <input type="email" id="reg-email" required>
+          </label>
+          <label>סיסמה
+            <input type="password" id="reg-password" required>
+          </label>
+          <button type="submit" class="btn primary">הרשמה</button>
+          <div class="auth-msg" id="reg-msg"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- חלון תשלום -->
+  <div id="checkout-modal" class="modal">
+    <div class="modal-card">
+      <h3 class="modal-title">פרטי משלוח ותשלום</h3>
+      <form id="checkout-form" class="modal-form">
+        <label>שם מלא <input id="co-name" type="text" required /></label>
+        <label>אימייל <input id="co-email" type="email" required /></label>
+        <label>כתובת <input id="co-address" type="text" required /></label>
+        <label>עיר <input id="co-city" type="text" required /></label>
+        <label>מיקוד <input id="co-zip" type="text" required /></label>
+        <label>מספר כרטיס <input id="co-card" type="text" required /></label>
+        <label>תוקף <input id="co-exp" type="text" required /></label>
+        <label>CVV <input id="co-cvv" type="text" required /></label>
+
+        <div id="co-summary-text" class="modal-summary">סה״כ: 0 ₪</div>
+
+        <div class="modal-actions">
+          <button type="button" id="co-cancel" class="btn">ביטול</button>
+          <button type="submit" class="btn primary">אישור הזמנה</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- חלון ההזמנות שלי -->
+  <div id="orders-modal" class="modal">
+    <div class="modal-card">
+      <h3 class="modal-title">ההזמנות שלי</h3>
+      <div id="orders-list" class="orders-list">
+        <p>טוען הזמנות...</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="orders-close" class="btn">סגור</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4>על החנות</h4>
+        <p>החנות שלי מציעה מגוון מוצרים איכותיים במחירים משתלמים, עם שירות לקוחות אישי ומשלוחים מהירים לכל הארץ.</p>
+      </div>
+
+      <div class="footer-section">
+        <h4>צור קשר</h4>
+        <ul>
+          <li>טלפון: 050-1234567</li>
+          <li>אימייל: support@myshop.co.il</li>
+          <li>כתובת: רחוב הדוגמה 5, תל אביב</li>
+        </ul>
+      </div>
+    </div>
+  
+    <div class="footer-bottom">
+      <p>© 2025 החנות שלי - כל הזכויות שמורות</p>
+    </div>
+  </footer>
+  
+</body>
+</html>
