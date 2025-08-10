@@ -16,7 +16,7 @@ function init() {
   loadHomeRows();
 }
 
-/* ===== קטגוריות ===== */
+/* === קטגוריות ===== */
 function loadCategoriesBar() {
   const barInner = document.getElementById('categories-bar-inner');
   if (!barInner) return;
