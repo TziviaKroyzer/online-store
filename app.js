@@ -98,7 +98,7 @@ function showSearchResults(q){
   content.textContent = 'טוען תוצאות…';
   section.appendChild(content);
 
-  fetch(`https://dummyjson.com/products/search?q=${encodeURIComponent(q)}`)
+  fetch(`https://dummyjson.com/products/search?q=${q}`)
     .then(res => { if(!res.ok) throw new Error('HTTP '+res.status); return res.json(); })
     .then(data => {
       const products = data.products || [];
@@ -124,7 +124,7 @@ function showSearchResults(q){
     });
 }
 
-/* ===== קטגוריה ===== */
+/* ===== הצגת קטגוריה מסוימת ===== */
 function showCategory(slug){
   const section = document.getElementById('category');
   if (!section) return;
@@ -253,7 +253,7 @@ function showProductDetails(productId) {
   content.className = 'product-hero';
   section.appendChild(content);
 
-  fetch(`https://dummyjson.com/products/${encodeURIComponent(productId)}`)
+  fetch(`https://dummyjson.com/products/${productId}`)
     .then(r => { if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(product => {
       title.textContent = product.title;
@@ -376,10 +376,12 @@ function writeCart(items){
   localStorage.setItem('cart', JSON.stringify(items));
   updateCartCount(items.reduce((sum,i)=> sum + (i.quantity||1), 0));
 }
+
 function updateCartCount(n){
   const el = document.getElementById('cart-count');
   if (el) el.textContent = n;
 }
+
 function addToCart(product, qty=1){
   const q = Math.max(1, Number(qty)||1);
   const cart = readCart();
@@ -398,10 +400,12 @@ function addToCart(product, qty=1){
   writeCart(cart);
   syncCartToUser().catch(console.error);
 }
+
 function removeFromCart(id){
   const cart = readCart().filter(x => x.id !== id);
   writeCart(cart);
 }
+
 function setCartQuantity(id, qty){
   const q = Math.max(0, Number(qty)||0);
   const cart = readCart();
@@ -414,6 +418,7 @@ function setCartQuantity(id, qty){
     writeCart(cart);
   }
 }
+
 function cartTotal(){
   return readCart().reduce((sum,i)=> sum + (Number(i.price)||0) * (i.quantity||1), 0);
 }
@@ -568,7 +573,6 @@ async function loginUser({ email, password }) {
   const doc = await retrieveUsers();
   const user = doc.users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
   if (!user) throw new Error('אימייל או סיסמה שגויים');
-
   // מיזוג סל מקומי
   const local = readCart();
   if (local.length){
@@ -658,10 +662,8 @@ function bindAuthNav(){
         try {
           // שמירת סל נוכחי למשתמש ב-JSONBin
           await syncCartToUser();
-  
           // ריקון הסל המקומי
           writeCart([]);
-  
           // מחיקת session
           clearSession();
           renderAuthUI();
