@@ -680,6 +680,7 @@ function bindAuthNav(){
 
 
 /* ===== Checkout ===== */
+// פונקציית שליחה עם אימות נתונים
 function openCheckout(){
   const sess = getSession();
   if (!sess){
@@ -709,17 +710,56 @@ function openCheckout(){
 
   form.onsubmit = async (e) => {
     e.preventDefault();
-    try{
-      await placeOrder();
+
+    // איסוף הנתונים מהטופס
+    const name  = document.getElementById('co-name').value.trim();
+    const email = document.getElementById('co-email').value.trim();
+    const address = document.getElementById('co-address').value.trim();
+    const city    = document.getElementById('co-city').value.trim();
+    const zip     = document.getElementById('co-zip').value.trim();
+    const card    = document.getElementById('co-card').value.replace(/\s+/g, ''); // להסיר רווחים
+    const exp     = document.getElementById('co-exp').value.trim();
+    const cvv     = document.getElementById('co-cvv').value.trim();
+
+    // בדיקות תקינות
+    if (!name || !email || !address || !city || !zip) {
+      alert('נא למלא את כל השדות.');
+      return;
+    }
+
+    // אימות אימייל
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('אימייל לא תקין');
+      return;
+    }
+
+    // אימות כרטיס אשראי
+    if (!/^\d{16}$/.test(card)) {
+      alert('מספר כרטיס לא תקין');
+      return;
+    }
+
+    // אימות CVV
+    if (!/^\d{3,4}$/.test(cvv)) {
+      alert('CVV לא תקין');
+      return;
+    }
+
+    // אם הכל תקין, מבצעים את ההזמנה
+    try {
+      await placeOrder(name, email, address, city, zip, card, exp, cvv);
       closeCheckout();
       renderCart();
       alert('ההזמנה נקלטה! תודה 🌟');
-    }catch(err){
+    } catch (err) {
       console.error(err);
       alert('שגיאה בביצוע ההזמנה.');
     }
   };
 }
+
+
 
 function closeCheckout(){
   const modal = document.getElementById('checkout-modal');
@@ -816,18 +856,22 @@ function initOrders() {
     const btnOrders = document.getElementById("nav-orders");
     const ordersModal = document.getElementById("orders-modal");
     const ordersClose = document.getElementById("orders-close");
-  
-    // הצגת הכפתור "ההזמנות שלי" אם יש משתמש מחובר
-    const sess = getSession?.();
-    if (sess) {
-      btnOrders.style.display = "inline-block";
-    }
-  
-    btnOrders.addEventListener("click", openOrdersModal);
-    ordersClose.addEventListener("click", () => {
-      ordersModal.classList.remove("show");
+
+    btnOrders.addEventListener("click", () => {
+        const sess = getSession();  // בודק אם יש session פעיל
+        if (!sess) {
+            alert('צריך להתחבר כדי לראות הזמנות');  // אם לא מחובר, מציג הודעה
+            showPage('login');  // פותח את עמוד ההתחברות
+            return;
+        }
+        openOrdersModal();  // אם מחובר, פותחים את חלון ההזמנות
     });
-  });
+
+    ordersClose.addEventListener("click", () => {
+        ordersModal.classList.remove("show");
+    });
+});
+
   
   async function openOrdersModal() {
     const sess = getSession?.();

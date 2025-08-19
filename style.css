@@ -176,19 +176,37 @@ button {
   margin: 0;
 }
 
-/* ===== סרגל קטגוריות מודרני ===== */
+/* ===== סרגל קטגוריות ===== */
 .categories-bar { 
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   border-bottom: 1px solid rgba(226, 232, 240, 0.6);
   padding: 15px 20px; 
+  
+  /* גלילה אופקית */
   overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  /* פס גלילה גלוי (במקום הסתרה) */
+  scrollbar-width: auto;      /* Firefox */
+  -ms-overflow-style: auto;   /* IE/Edge ישנים */
 }
 
 .categories-bar::-webkit-scrollbar {
-  display: none;
+  height: 8px;
 }
+
+.categories-bar::-webkit-scrollbar-track {
+  background: #eef2f7;
+  border-radius: 10px;
+}
+
+.categories-bar::-webkit-scrollbar-thumb {
+  background: #c6cee4;
+  border-radius: 10px;
+}
+
+
 
 .bar-inner { 
   display: flex; 
@@ -881,6 +899,17 @@ main {
   color: #2d3748;
   text-align: center;
 }
+/* הסתרת החיצים בשדות מסוג "number" */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 
 .modal-form { 
   display: grid; 
@@ -1230,9 +1259,6 @@ main {
     padding: 20px;
   }
   
-  .categories-bar {
-    padding: 10px 15px;
-  }
   
   .category-item {
     padding: 8px 16px;
